@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#f4f1e9" />
+    <title>Y-Vision | Suporte remoto</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar">
+        <a class="brand" href="#inicio" aria-label="Y-Vision início">
+          <span class="brand-mark" aria-hidden="true">Y</span>
+          <span>Y-Vision</span>
+        </a>
+        <div class="workspace-label">ESPAÇO DE TRABALHO</div>
+        <nav class="nav-list" aria-label="Navegação principal">
+          <a class="nav-item active" href="#inicio"><span class="nav-glyph">◉</span> Conexões</a>
+          <a class="nav-item" href="#seguranca"><span class="nav-glyph">⌑</span> Segurança</a>
+        </nav>
+        <div class="sidebar-bottom">
+          <div class="server-note"><span class="note-dot"></span><div><strong>Servidor ativo</strong><small>Acessível pela LAN</small></div></div>
+          <button class="profile-button" id="profile-button" type="button">
+            <span class="avatar">V</span><span class="profile-copy"><strong id="profile-name">Visitante</strong><small>Perfil local</small></span><span class="profile-menu">···</span>
+          </button>
+        </div>
+      </aside>
+      <main class="main-content" id="inicio">
+        <header class="topbar">
+          <div class="breadcrumb">Y-Vision <span>/</span> Conexões</div>
+          <div class="topbar-right"><span class="local-badge"><span></span><span id="connection-state">Servidor LAN</span></span><button class="help-button" id="help-button" type="button" aria-label="Ajuda sobre a conexão LAN">?</button></div>
+        </header>
+        <section class="page-heading">
+          <div><p class="eyebrow">SUPORTE REMOTO, COM CONSENTIMENTO</p><h1>Conexões</h1><p class="heading-copy">Compartilhe tela e áudio entre computadores na mesma rede.</p></div>
+          <div class="secure-caption"><span class="lock-icon">⌑</span><span>Sua transmissão só começa<br />quando você autoriza no navegador.</span></div>
+        </section>
+        <section class="connection-grid" aria-label="Opções de conexão">
+          <article class="connection-panel share-panel">
+            <div class="panel-heading"><div class="panel-icon orange-icon" aria-hidden="true">↗</div><div><h2>Compartilhar este PC</h2><p>Crie uma sala para receber ajuda.</p></div></div>
+            <div class="lan-address-row"><div><span>Endereço deste PC na LAN</span><code id="lan-address">Detectando rede...</code></div><button id="copy-lan-address" type="button" aria-label="Copiar endereço LAN" title="Copiar endereço LAN">Copiar</button></div>
+            <div class="room-preview" id="room-preview">
+              <div class="preview-empty" id="preview-empty"><div class="screen-symbol" aria-hidden="true"><span></span></div><strong>Sua tela ainda não está sendo transmitida</strong><span>Você verá uma prévia aqui depois de autorizar o compartilhamento.</span></div>
+              <video id="screen-preview" autoplay muted playsinline hidden></video>
+              <div class="live-indicator" id="live-indicator" hidden><span></span> TRANSMITINDO</div>
+            </div>
+            <div class="room-details">
+              <label class="field-label" for="room-password">Senha da sala <span>OPCIONAL</span></label>
+              <div class="password-field"><input id="room-password" type="password" placeholder="Defina uma senha para a sala" autocomplete="new-password" /><button id="toggle-password" type="button" aria-label="Mostrar senha">Mostrar</button></div>
+              <div class="room-code-row" id="room-code-row" hidden><div><span>ID da sala</span><strong id="room-code"></strong></div><button id="copy-room-code" type="button">Copiar ID</button></div>
+              <button class="primary-button" id="start-share" type="button"><span aria-hidden="true">▣</span> Iniciar compartilhamento</button>
+              <button class="stop-button" id="stop-share" type="button" hidden>Encerrar transmissão</button>
+              <div class="request-panel" id="request-panel" hidden><div><strong>Pedido de entrada</strong><span>Autorize somente alguém que você conhece.</span></div><button class="approve-button" id="approve-viewer" type="button">Autorizar</button><button class="deny-button" id="deny-viewer" type="button">Recusar</button></div>
+              <p class="inline-notice" id="share-message" role="status" aria-live="polite"></p>
+            </div>
+          </article>
+          <article class="connection-panel join-panel">
+            <div class="panel-heading"><div class="panel-icon dark-icon" aria-hidden="true">↙</div><div><h2>Entrar em uma sala</h2><p>Conecte-se ao PC de alguém com autorização.</p></div></div>
+            <form id="join-form">
+              <label class="field-label" for="host-address">Endereço LAN do host</label><input class="text-input" id="host-address" type="url" placeholder="http://192.168.1.25:porta" autocomplete="url" required />
+              <label class="field-label second-label" for="room-id">ID da sala</label><input class="text-input" id="room-id" type="text" placeholder="Código informado pelo host" autocomplete="off" maxlength="20" required />
+              <label class="field-label second-label" for="join-password">Senha da sala <span>SE SOLICITADA</span></label><input class="text-input" id="join-password" type="password" placeholder="Digite a senha" autocomplete="off" />
+              <button class="secondary-button" type="submit">Solicitar entrada <span aria-hidden="true">→</span></button><p class="inline-notice" id="join-message" role="status" aria-live="polite"></p>
+            </form>
+            <button class="stop-button leave-room-button" id="leave-room" type="button" hidden>Sair da sala</button>
+            <div class="consent-callout"><span class="callout-mark">i</span><p>Execute o Y-Vision nos dois PCs. O dono precisa aprovar a entrada; esta versão transmite tela e áudio, sem controle de mouse/teclado.</p></div>
+          </article>
+        </section>
+        <section class="session-strip" id="seguranca"><div class="session-strip-icon">✓</div><div><strong>Privacidade em primeiro lugar</strong><p>Sem acesso oculto. Nenhum administrador pode visualizar ou controlar seu PC sem uma sessão aprovada por você.</p></div><button id="security-details" type="button">Ver detalhes <span aria-hidden="true">↗</span></button></section>
+        <footer class="page-footer"><span>Y-Vision <span class="footer-separator">·</span> Conexão direta na rede local</span><span>Áudio e vídeo usam WebRTC ponto a ponto</span></footer>
+      </main>
+    </div>
+    <dialog id="info-dialog" class="info-dialog"><form method="dialog"><button class="dialog-close" aria-label="Fechar">×</button></form><p class="eyebrow">Y-VISION</p><h2 id="dialog-title">Sobre esta demonstração</h2><p id="dialog-copy">O servidor e os códigos de sala funcionam na rede local. Compartilhamento só começa após a permissão do navegador e aprovação explícita de cada convidado. Cada PC precisa executar o Y-Vision.</p><button class="primary-button dialog-action" id="dialog-ok" type="button">Entendi</button></dialog>
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  </body>
+</html>
